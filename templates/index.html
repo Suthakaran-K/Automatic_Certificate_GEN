@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Digital Certificate Generator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <div><div class="eyebrow">ADMIN WORKSPACE</div><h1>Digital Certificate Generator</h1></div>
+  <span class="live-pill">● System dashboard</span>
+</header>
+<main class="container">
+  <section class="stats-grid" id="stats">
+    <article class="stat-card"><span>Records</span><strong id="total">—</strong><small>Saved in database</small></article>
+    <article class="stat-card"><span>Certificates</span><strong id="generated">—</strong><small>PDFs generated</small></article>
+    <article class="stat-card"><span>Emails sent</span><strong id="sent">—</strong><small>SMTP confirmed</small></article>
+    <article class="stat-card"><span>Email failures</span><strong id="failed">—</strong><small>Can be retried</small></article>
+  </section>
+
+  <section class="panel">
+    <div class="section-heading"><div><div class="eyebrow">STEP 01</div><h2>Upload participant spreadsheet</h2></div>
+      <a class="text-link" href="/static/sample_participants.csv" download>Download CSV example</a></div>
+    <p class="muted">Required columns: Name, Email, Event Name, Certificate Type. Supports .xlsx and .csv.</p>
+    <form id="uploadForm" class="upload-row">
+      <input id="spreadsheet" name="file" type="file" accept=".xlsx,.csv" required>
+      <button type="submit" class="button primary">Upload &amp; validate</button>
+    </form>
+    <div id="uploadMessage" class="message" role="status"></div>
+    <div id="previewWrap" hidden>
+      <div class="preview-header"><h3>Participant preview</h3><div id="validationSummary" class="muted"></div></div>
+      <div class="table-wrap"><table><thead><tr><th>Row</th><th>Name</th><th>Email</th><th>Event</th><th>Certificate type</th><th>Validation</th></tr></thead><tbody id="previewBody"></tbody></table></div>
+      <button id="generateBtn" class="button primary" disabled>Generate PDFs &amp; send emails</button>
+      <div id="generationMessage" class="message" role="status"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="section-heading"><div><div class="eyebrow">TEMPLATES</div><h2>Certificate template files</h2></div></div>
+    <p class="muted">Upload your original artwork. Text positions can be adjusted in <code>certificate_generator.py</code>.</p>
+    <div id="templateList" class="template-grid"></div>
+  </section>
+
+  <section class="panel">
+    <div class="section-heading"><div><div class="eyebrow">DATABASE</div><h2>Generated certificates</h2></div><button id="refreshBtn" class="button secondary">Refresh</button></div>
+    <div class="filters">
+      <input id="search" type="search" placeholder="Search participant or email">
+      <select id="typeFilter"><option value="">All certificate types</option><option>Participation</option><option>First Prize</option><option>Second Prize</option></select>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>Participant</th><th>Email</th><th>Event</th><th>Type</th><th>Created</th><th>Email status</th><th>PDF</th><th>Action</th></tr></thead><tbody id="certificatesBody"></tbody></table></div>
+    <p id="emptyState" class="muted empty">No certificate records yet. Upload a spreadsheet to begin.</p>
+  </section>
+  <footer>Keep SMTP credentials private. For public deployment, add administrator authentication before exposing upload, generation, or template-management routes.</footer>
+</main>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
